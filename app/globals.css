@@ -44,6 +44,9 @@ body {
   .primary-gradient {
     background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%);
   }
+  .secondary-gradient {
+    background: linear-gradient(45deg, #2e86de 0%, #1e3a8a 100%);
+  }
 
   .dark-gradient {
     background: linear-gradient(
@@ -77,8 +80,8 @@ body {
 
 .primary-text-gradient {
   background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%);
-  -webkit-background-clip: text;
   background-clip: text;
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
