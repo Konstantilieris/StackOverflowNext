@@ -55,12 +55,11 @@ export async function deleteUser(params: DeleteUserParams) {
     // Delete user from database
     // questions,answers,comments ,etc
     // get user questions ids
-    const userQuestionIds = await Question.find({ athor: user._id }).distinct(
-      "_id"
-    );
+    // const userQuestionIds = await Question.find({ athor: user._id }).distinct(  "_id" );
     await Question.deleteMany({ author: user._id });
     // TODO: delete user answers ,comments,etc
     const deletedUser = await User.findByIdAndDelete(user._id);
+    return deletedUser;
   } catch (error) {
     console.log(error);
     throw error;
