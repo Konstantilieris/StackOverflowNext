@@ -202,4 +202,7 @@
       rgba(19, 22, 28, 0.7) 100%
     );
   }
+  .stats-card {
+    @apply light-border background-light900_dark300 flex flex-wrap items-center justify-evenly gap-4 rounded-md border p-6 shadow-light-300 dark:shadow-dark-200;
+  }
 }

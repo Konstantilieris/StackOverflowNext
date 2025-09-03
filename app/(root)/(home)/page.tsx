@@ -1,25 +1,35 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import Filter from "@/components/shared/Filter";
 import { HomePageFilters } from "@/constants/filters";
-import HomeFilters from "@/components/home/HomeFilters";
 import QuestionCard from "@/components/cards/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
 import { getQuestions } from "@/lib/actions/question.action";
-export default async function Home() {
-  const result = await getQuestions({});
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import HomeFilters from "@/components/home/HomeFilters";
+import { SearchParamsProps } from "@/types";
+import Pagination from "@/components/Pagination";
+export default async function Home({ searchParams }: SearchParamsProps) {
+  const query = searchParams.q;
+  const filter = searchParams.filter;
+  const result = await getQuestions({
+    searchQuery: query,
+    filter,
+    page: searchParams.page ? +searchParams.page : 1,
+  });
 
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-dark100_light900">All Questions</h1>
-        <Link href="/ask-question" className=" flex justify-end max-sm:w-full">
-          <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900">
+
+        <Link href="/ask-question" className="flex justify-end max-sm:w-full">
+          <Button className="primary-gradient min-h-[46px] px-4 py-3 font-bold !text-light-900 hover:animate-bounce">
             Ask a Question
           </Button>
         </Link>
       </div>
+
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
           route="/"
@@ -34,10 +44,11 @@ export default async function Home() {
           containerClasses="hidden max-md:flex"
         />
       </div>
+
       <HomeFilters />
       <div className="mt-10 flex w-full flex-col gap-6">
         {result?.questions?.length! > 0 ? (
-          result?.questions.map((question) => {
+          result?.questions.map((question: any) => {
             return (
               <QuestionCard
                 key={question._id}
@@ -45,7 +56,7 @@ export default async function Home() {
                 title={question.title}
                 tags={question.tags}
                 author={question.author}
-                upvotes={question.upvotes}
+                upvotes={question.upvotes.length}
                 views={question.views}
                 answers={question.answers}
                 createdAt={question.createdAt}
@@ -54,7 +65,7 @@ export default async function Home() {
           })
         ) : (
           <NoResult
-            title={"There is no questions to show"}
+            title={"There is no saved questions to show"}
             description="Be the first to break the silence! 🚀 Ask a Question and kickstart the
        discussion. our query could be the next big thing others learn from. Get
        involved! 💡"
@@ -62,6 +73,12 @@ export default async function Home() {
             linkTitle="Ask a question"
           />
         )}
+      </div>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result?.isNext}
+        />
       </div>
     </>
   );
